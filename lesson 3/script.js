@@ -47,8 +47,8 @@ string
 boolean
 null
 undefined
+bigin
 symbol
-BigInt
 */
 
 
