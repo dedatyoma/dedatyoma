@@ -52,7 +52,3 @@ symbol
 */
 
 
-/*
-Referal
-1. Object
- */
