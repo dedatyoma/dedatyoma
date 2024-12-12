@@ -4,8 +4,12 @@ let ladder = {
     this.ladder++;
     return this;
   },
-  down: function () { 
-    this.ladder--;
+  down: function () {
+    if (this.ladder > 0) {
+      this.ladder--;
+    } else {
+      console.log("You are already on the ground floor!");
+    }
     return this;
   },
   showStep: function () { 
