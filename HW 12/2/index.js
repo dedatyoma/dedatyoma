@@ -1,12 +1,9 @@
-const clickCounts = {};
-function clicked(buttonText) {
-  if (!clickCounts[buttonText]) {
-    clickCounts[buttonText] = 0;
+const container = document.getElementById('container');
+
+container.addEventListener('click', function(event) {
+
+  if (event.target && event.target.tagName === 'BUTTON') {
+
+  alert(`Ви клікнули на ${event.target.textContent}`);
   }
-  clickCounts[buttonText]++;
-  if(clickCounts[buttonText] === 1){
-    alert(`You clicked ${clickCounts[buttonText]} time.`);
-  } else {
-    alert(`You clicked ${clickCounts[buttonText]} times.`);
-  }
-}
+ });
