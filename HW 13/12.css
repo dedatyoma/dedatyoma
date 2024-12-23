@@ -1,0 +1,13 @@
+
+.caption{
+  color:rgb(242, 85, 111);
+  font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+  font-weight: bolder;
+}
+.answer{
+  font-family:Arial, Helvetica, sans-serif;
+  font-weight: 700;
+  text-transform: uppercase;
+  font-size: 12px;
+  color:grey;
+}
