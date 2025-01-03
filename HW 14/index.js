@@ -1,26 +1,27 @@
-let slideIndex = 1;
-showSlides(slideIndex);
+document.addEventListener('DOMContentLoaded', () => {
+  const slides = document.querySelectorAll('.mySlides');
+  const dots = document.querySelectorAll('.dot');
+  const prevButton = document.querySelector('.prev');
+  const nextButton = document.querySelector('.next');
+  
+  let slideIndex = 0;
 
-function plusSlides(n) {
-  showSlides(slideIndex += n);
-}
+  const showSlides = (index) => {
+    slideIndex = (index + slides.length) % slides.length;
+    slides.forEach((slide, i) => {
+      slide.style.display = i === slideIndex ? 'block' : 'none';
+    });
+    dots.forEach((dot, i) => {
+      dot.classList.toggle('active', i === slideIndex);
+    });
+    prevButton.style.display = slideIndex === 0 ? 'none' : 'block';
+    nextButton.style.display = slideIndex === slides.length - 1 ? 'none' : 'block';
+  };
 
-function currentSlide(n) {
-  showSlides(slideIndex = n);
-}
-
-function showSlides(n) {
-  let i;
-  let slides = document.getElementsByClassName("mySlides");
-  let dots = document.getElementsByClassName("dot");
-  if (n > slides.length) {slideIndex = 1}
-  if (n < 1) {slideIndex = slides.length}
-  for (i = 0; i < slides.length; i++) {
-    slides[i].style.display = "none";
-  }
-  for (i = 0; i < dots.length; i++) {
-    dots[i].className = dots[i].className.replace(" active", "");
-  }
-  slides[slideIndex-1].style.display = "block";
-  dots[slideIndex-1].className += " active";
-}
+  prevButton.addEventListener('click', () => showSlides(slideIndex - 1));
+  nextButton.addEventListener('click', () => showSlides(slideIndex + 1));
+  dots.forEach((dot, i) => {
+    dot.addEventListener('click', () => showSlides(i));
+  });
+  showSlides(slideIndex);
+});
