@@ -3,11 +3,11 @@ $(document).ready(function() {
         const tasks = JSON.parse(localStorage.getItem('tasks')) || [];
         $('#todo-list').empty();
         tasks.forEach(function(task) {
-            const taskItem = `<li data-id="${task.id}">
-                        <span class="task-text">${task.text}</span>
-                    <button class="complete-task btn btn-success btn-sm">${task.completed ? '✔' : '✖'}</button>
-                    <button class="delete-task btn btn-danger btn-sm">✖</button>
-                </li>`;
+            const taskItem = $('<li>')
+                .attr('data-id', task.id)
+                .append($('<span>').addClass('task-text').text(task.text))
+                .append($('<button>').addClass('complete-task btn btn-success btn-sm').text(task.completed ? '✔' : '✖'))
+                .append($('<button>').addClass('delete-task btn btn-danger btn-sm').text('✖'));
             $('#todo-list').append(taskItem);
         });
     }
@@ -27,12 +27,11 @@ $(document).ready(function() {
         const taskText = $('#new-task').val().trim();
         if (taskText !== '') {
             const taskId = new Date().getTime();
-            const taskItem = `
-                <li data-id="${taskId}">
-                    <span class="task-text">${taskText}</span>
-                    <button class="complete-task btn btn-success btn-sm">✖</button>
-                    <button class="delete-task btn btn-danger btn-sm">✖</button>
-                </li>`;
+            const taskItem = $('<li>')
+                .attr('data-id', taskId)
+                .append($('<span>').addClass('task-text').text(taskText))
+                .append($('<button>').addClass('complete-task btn btn-success btn-sm').text('✖'))
+                .append($('<button>').addClass('delete-task btn btn-danger btn-sm').text('✖'));
             $('#todo-list').append(taskItem);
             $('#new-task').val('');
             saveTasks();
