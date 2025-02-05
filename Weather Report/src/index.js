@@ -1,3 +1,4 @@
+import './styles.scss';
 const button = document.querySelector('.button');
 const inputValue = document.querySelector('.inputValue');
 const nameElement = document.querySelector('.name');
@@ -53,3 +54,5 @@ refreshButton.addEventListener('click', () => {
 
 updateData();
 setInterval(updateData, 1000);
+
+
