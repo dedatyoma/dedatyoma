@@ -10,12 +10,12 @@ const importImage = (imageName) => {
 };
 
 const ProductDisplay = (props) => {
-  const {product} = props;
+  const { product } = props;
   const dispatch = useDispatch();
   const products = useSelector(state => state.products.items);
   const status = useSelector(state => state.products.status);
   const error = useSelector(state => state.products.error);
-  
+
   return (
     <div className='product-display'>
       <div className="left">
@@ -53,9 +53,10 @@ const ProductDisplay = (props) => {
             <div>XXL</div>
           </div>
         </div>
-        <button 
+        <button
           className="add-to-cart-btn"
-          onClick={() => {dispatch(addToCart(product.id))
+          onClick={() => {
+            dispatch(addToCart(product.id))
             return alert("Item added to the cart.")
           }}
         >

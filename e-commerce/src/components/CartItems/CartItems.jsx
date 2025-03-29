@@ -5,6 +5,7 @@ import { selectAllProducts } from '../../redux/slices/productsSlice';
 import remove_icon from '../../assets/cart_cross_icon.png';
 import './CartItems.css';
 import { images } from '../Item/Item';
+import all_product from '../../assets/all_product'
 
 const CartItems = () => {
   const dispatch = useDispatch();
@@ -12,18 +13,14 @@ const CartItems = () => {
   const products = useSelector(selectAllProducts);
 
   const getTotalCartPrice = () => {
-    if (!products || products.length === 0) return 0;
-    
     let totalAmount = 0;
-    Object.entries(cartItems).forEach(([itemId, quantity]) => {
-      if (quantity > 0) {
-        const itemInfo = products.find((product) => product.id === parseInt(itemId));
-        if (itemInfo) {
-          totalAmount += itemInfo.new_price * quantity;
-        }
+    for ( const item in cartItems) {
+      if(cartItems[item] > 0) {
+        let itemInfo = all_product.find((product) => product.id === Number(item)) 
+        totalAmount += itemInfo.new_price * cartItems[item];
       }
-    });
-    return totalAmount;
+      return totalAmount
+    }
   };
 
   const handleQuantityChange = (productId, action) => {
