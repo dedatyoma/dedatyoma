@@ -1,11 +1,9 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { removeFromCart, clearCart, selectCartItems } from '../../redux/slices/cartSlice';
+import { removeFromCart, clearCart, selectCartItems, addToCart } from '../../redux/slices/cartSlice';
 import { selectAllProducts } from '../../redux/slices/productsSlice';
-import remove_icon from '../Assets/cart_cross_icon.png';
+import remove_icon from '../../assets/cart_cross_icon.png';
 import './CartItems.css';
-
-// Import images object from Item component
 import { images } from '../Item/Item';
 
 const CartItems = () => {
@@ -13,17 +11,27 @@ const CartItems = () => {
   const cartItems = useSelector(selectCartItems);
   const products = useSelector(selectAllProducts);
 
-  const getTotalCartAmount = () => {
+  const getTotalCartPrice = () => {
+    if (!products || products.length === 0) return 0;
+    
     let totalAmount = 0;
-    for (const item in cartItems) {
-      if (cartItems[item] > 0) {
-        const itemInfo = products.find((product) => product.id === Number(item));
+    Object.entries(cartItems).forEach(([itemId, quantity]) => {
+      if (quantity > 0) {
+        const itemInfo = products.find((product) => product.id === parseInt(itemId));
         if (itemInfo) {
-          totalAmount += itemInfo.new_price * cartItems[item];
+          totalAmount += itemInfo.new_price * quantity;
         }
       }
-    }
+    });
     return totalAmount;
+  };
+
+  const handleQuantityChange = (productId, action) => {
+    if (action === 'increase') {
+      dispatch(addToCart(productId));
+    } else if (action === 'decrease') {
+      dispatch(removeFromCart(productId));
+    }
   };
 
   return (
@@ -47,7 +55,19 @@ const CartItems = () => {
                   <td><img src={images[e.image]} alt={`${e.name} product`} className='product-icon'/></td>
                   <td>{e.name}</td>
                   <td className='price'>${e.new_price}</td>
-                  <td className='quantity-item'><button className='add-remove-item'>+</button><button className='quantity' aria-label={`Quantity of ${e.name}`}>{cartItems[e.id]}</button><button className='add-remove-item'>-</button></td>
+                  <td className='quantity-item'>
+                    <button 
+                      className='add-remove-item' 
+                      onClick={() => handleQuantityChange(e.id, 'increase')}
+                      aria-label={`Increase quantity of ${e.name}`}
+                    >+</button>
+                    <button className='quantity' aria-label={`Quantity of ${e.name}`}>{cartItems[e.id]}</button>
+                    <button 
+                      className='add-remove-item' 
+                      onClick={() => handleQuantityChange(e.id, 'decrease')}
+                      aria-label={`Decrease quantity of ${e.name}`}
+                    >-</button>
+                  </td>
                   <td className='total'>${e.new_price * cartItems[e.id]}</td>
                   <td>
                     <button 
@@ -71,7 +91,7 @@ const CartItems = () => {
           <h1>Cart Totals</h1>
           <div className='cartitems-total-item'>
             <h3>Subtotal</h3>
-            <h3>${getTotalCartAmount()}</h3>
+            <h3>${getTotalCartPrice()}</h3>
           </div>
           <hr />
           <div className="cartitems-total-item">
@@ -81,7 +101,7 @@ const CartItems = () => {
           <hr />
           <div className="cartitems-total-item">
             <h3>Total</h3>
-            <h3>${getTotalCartAmount()}</h3>
+            <h3>${getTotalCartPrice()}</h3>
           </div>
           <div className="cart-buttons">
             <button className="checkout-button">Proceed to Checkout</button>
