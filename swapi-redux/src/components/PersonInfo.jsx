@@ -4,7 +4,6 @@ import { fetchPerson } from '../store/actions';
 
 const PersonInfo = () => {
   const dispatch = useDispatch();
-  // Використовуємо окремі селектори для кожного поля
   const person = useSelector(state => state.person);
   const loading = useSelector(state => state.loading);
   const error = useSelector(state => state.error);

@@ -101,7 +101,6 @@ const ShopCategory = (props) => {
         
         <div className="page-numbers">
           {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
-            // Show current page and nearby pages
             let pageNum;
             if (totalPages <= 5) {
               pageNum = i + 1;

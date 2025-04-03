@@ -12,7 +12,7 @@ const Footer = () => {
         Clear Data
       </button>
     </footer>
-  );
+  );        
 };
 
 export default Footer;

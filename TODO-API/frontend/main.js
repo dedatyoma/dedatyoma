@@ -2,55 +2,41 @@ const form = document.querySelector('.js--form');
 const input = document.querySelector('.js--form__input');
 const todosWrapper = document.querySelector('.js--todos-wrapper');
 
-const API_URL = "http://localhost:3000/todos";
+function saveTodos() {
+    const todos = Array.from(todosWrapper.querySelectorAll('.todo-item')).map(todoItem => {
+        return {
+            description: todoItem.querySelector('.todo-item__description').textContent,
+            checked: todoItem.querySelector('input[type="checkbox"]').checked,
+        };
+    });
+    localStorage.setItem('todos', JSON.stringify(todos));
+}
 
-async function loadTodos() {
-
+function loadTodos() {
     while (todosWrapper.firstChild) {
         todosWrapper.removeChild(todosWrapper.firstChild);
     }
 
-    try {
-        const response = await fetch(API_URL);
-        if (!response.ok) throw new Error(`HTTP Error: ${response.status}`);
-        
-        const todos = await response.json();
-
-        todos.forEach(todo => {
-            const todoItem = createTodoItem(todo.description, todo.checked, todo._id);
-            todosWrapper.appendChild(todoItem);
-        });
-    } catch (error) {
-        console.error("Помилка завантаження завдань:", error);
-    }
+    const todos = JSON.parse(localStorage.getItem('todos')) || [];
+    todos.forEach(todo => {
+        const todoItem = createTodoItem(todo.description, todo.checked);
+        todosWrapper.appendChild(todoItem);
+    });
 }
 
-function createTodoItem(description, checked = false, id = null) {
+function createTodoItem(description, checked = false) {
     const todoItem = document.createElement('li');
     todoItem.classList.add('todo-item');
     if (checked) {
         todoItem.classList.add('todo-item--checked');
     }
-    
-    if (id) {
-        todoItem.dataset.id = id;
-    }
 
     const checkbox = document.createElement('input');
     checkbox.type = 'checkbox';
     checkbox.checked = checked;
-    checkbox.addEventListener('change', async function () {
+    checkbox.addEventListener('change', function () {
         todoItem.classList.toggle('todo-item--checked');
-        try {
-            const response = await fetch(`${API_URL}/${id}`, {
-                method: 'PUT',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ checked: checkbox.checked }),
-            });
-            if (!response.ok) throw new Error(`HTTP Error: ${response.status}`);
-        } catch (error) {
-            console.error("Помилка оновлення завдання:", error);
-        }
+        saveTodos();
     });
 
     const descriptionSpan = document.createElement('span');
@@ -60,44 +46,34 @@ function createTodoItem(description, checked = false, id = null) {
     const deleteButton = document.createElement('button');
     deleteButton.classList.add('todo-item__delete');
     deleteButton.textContent = 'Видалити';
-    deleteButton.addEventListener('click', async function () {
-        try {
-            const response = await fetch(`${API_URL}/${id}`, { method: 'DELETE' });
-            if (!response.ok) throw new Error(`HTTP Error: ${response.status}`);
-            todosWrapper.removeChild(todoItem);
-        } catch (error) {
-            console.error("Помилка видалення завдання:", error);
-        }
+    deleteButton.addEventListener('click', function () {
+        todoItem.remove();
+        saveTodos();
     });
 
     todoItem.append(checkbox, descriptionSpan, deleteButton);
     return todoItem;
 }
 
-form.addEventListener('submit', async function (event) {
+form.addEventListener('submit', function (event) {
     event.preventDefault();
 
     const inputValue = input.value.trim();
-    if (!inputValue) {
+    if (inputValue === '') {
         alert('Введіть текст завдання!');
         return;
     }
 
-    try {
-        const response = await fetch(API_URL, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ description: inputValue, checked: false }),
-        });
-        if (!response.ok) throw new Error(`HTTP Error: ${response.status}`);
+    const todoItem = createTodoItem(inputValue);
+    todosWrapper.appendChild(todoItem);
 
-        const newTodo = await response.json();
-        const todoItem = createTodoItem(newTodo.description, newTodo.checked, newTodo._id);
-        todosWrapper.appendChild(todoItem);
+    input.value = '';
+    saveTodos();
+});
 
-        input.value = '';
-    } catch (error) {
-        console.error("Помилка додавання завдання:", error);
+window.addEventListener('storage', function (event) {
+    if (event.key === 'todos') {
+        loadTodos();
     }
 });
 

@@ -54,7 +54,6 @@ const ProductDisplay = (props) => {
           className="add-to-cart-btn"
           onClick={() => {
             dispatch(addToCart(product.id))
-            return alert("Item added to the cart.")
           }}
         >
           ADD TO CART
