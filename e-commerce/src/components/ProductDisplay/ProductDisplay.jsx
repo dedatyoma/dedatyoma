@@ -3,11 +3,8 @@ import { useDispatch, useSelector } from 'react-redux'
 import star_icon from '../../assets/star_icon.png'
 import star_dull_icon from '../../assets/star_dull_icon.png'
 import { addToCart } from '../../redux/slices/cartSlice'
+import { getImage } from '../../utils/imageUtils'
 import './ProductDisplay.css'
-
-const importImage = (imageName) => {
-  return new URL(`../../assets/${imageName}`, import.meta.url).href;
-};
 
 const ProductDisplay = (props) => {
   const { product } = props;
@@ -20,13 +17,13 @@ const ProductDisplay = (props) => {
     <div className='product-display'>
       <div className="left">
         <div className="list">
-          <img src={importImage(product.image)} alt="" />
-          <img src={importImage(product.image)} alt="" />
-          <img src={importImage(product.image)} alt="" />
-          <img src={importImage(product.image)} alt="" />
+          <img src={getImage(product.image)} alt="" />
+          <img src={getImage(product.image)} alt="" />
+          <img src={getImage(product.image)} alt="" />
+          <img src={getImage(product.image)} alt="" />
         </div>
         <div className="productdisplay-img">
-          <img className='main-img' src={importImage(product.image)} alt="" />
+          <img className='main-img' src={getImage(product.image)} alt="" />
         </div>
       </div>
       <div className="right">
